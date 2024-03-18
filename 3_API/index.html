@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API - Lab 1</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API";
+        var mkdocs_page_input_path = "3_API.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Lab 1
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Описание</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../1_tema/">Тема</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../2_model/">Модель данных</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">API</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#auth">Аутентификация (auth)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_1">Зарегистрироваться</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_2">Вход в систему</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_3">Изменение пароля пользователя</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_4">Получение данных текущего пользователя</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_5">Код:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#user">Пользователь (user)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_6">Установка навыка для пользователей</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_7">Получение всех пользователей</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_8">Удаление пользователя</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_9">Обновление данных пользователя</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_10">Код:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#skill">Навыки (Skill)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_11">Создание навыка</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_12">Получение всех навыков</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#id">Получение навыка по ID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_13">Обновление информации о навыке</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_14">Удаление навыка</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_15">Код:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#team">Команда (Team)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_16">Создание команды</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_17">Получение всех команд</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_18">Обновление информации о команде</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_19">Удаление команды</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_20">Присоединение к команде</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_21">Код:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_22">Решение</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_23">Создание решения</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_24">Получение всех решений</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#id_1">Получение решения по ID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_25">Обновление информации о решении</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_26">Удаление решения</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_27">Код:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_28">Задача</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_29">Создание задачи</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_30">Получение всех задач</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_31">Удаление задачи</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_32">Обновление информации о задаче</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_33">Код:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_34">Комментарий</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_35">Создание комментария</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_36">Получение всех комментариев</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#id_2">Получение комментария по его ID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_37">Обновление информации о комментарии</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_38">Удаление комментария</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_39">Код:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Lab 1</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">API</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api">API</h1>
+<h2 id="auth">Аутентификация (auth)</h2>
+<h3 id="_1">Зарегистрироваться</h3>
+<ul>
+<li>API, используемый для регистрации новых пользователей</li>
+<li>Метод: <code>POST</code></li>
+<li>URL : <code>/signup</code></li>
+<li>Параметры запроса:<ul>
+<li>user: Объект, содержащий информацию о новом пользователе, включая username и пароль.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_2">Вход в систему</h3>
+<ul>
+<li>API, используемый для создания токенов доступа и обновления для пользователя.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/login</code></li>
+<li>Параметры запроса:<ul>
+<li><code>user</code>: Объект, содержащий информацию о пользователе, включая имя пользователя (<code>username</code>) и пароль (<code>password</code>).</li>
+</ul>
+</li>
+</ul>
+<h3 id="_3">Изменение пароля пользователя</h3>
+<ul>
+<li>API, используемый для изменения пароля пользователя.</li>
+<li>Метод: <code>PUT</code></li>
+<li>URL: <code>/change-password</code></li>
+<li>Параметры запроса:<ul>
+<li><code>data</code>: Объект, содержащий информацию о запросе на изменение пароля, включая старый пароль (<code>old_password</code>) и новый пароль (<code>new_password</code>).</li>
+<li><code>current_user</code>: Текущий пользователь, полученный через зависимость <code>auth_handler.get_current_user()</code>.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_4">Получение данных текущего пользователя</h3>
+<ul>
+<li>API, используемый для получения информации о текущем вошедшем пользователе.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/me</code></li>
+<li>Параметры запроса:<ul>
+<li><code>user</code>: Текущий пользователь, полученный через зависимость <code>auth_handler.get_current_user()</code>.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_5">Код:</h3>
+<pre><code class="language-python">from fastapi import Depends, HTTPException, APIRouter,  status
+from auth.auth_handler import AuthHandler
+from db import get_session
+from models import UserDefault,User, TokenSchema, UserInput,ChangePasswordRequest
+from typing import TypedDict
+router = APIRouter()
+auth_handler = AuthHandler()
+
+@router.post('/signup', summary=&quot;Create new user&quot;)
+async def create_user(user: UserDefault, session=Depends(get_session))-&gt; TypedDict('Response', {&quot;status&quot;: int,&quot;data&quot;: User}): # type: ignore
+    try:
+        user_tmp = session.query(User).filter(User.email == user.email).first()
+        if user_tmp is None:
+            user.password = auth_handler.get_password_hash(user.password)
+            user = User.model_validate(user)
+            session.add(user)
+            session.commit()
+            session.refresh(user) 
+            return {&quot;status&quot;: 200, &quot;data&quot;: user}
+        else :
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=&quot;User with this email already exist&quot;)
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.post('/login', summary=&quot;Create access and refresh tokens for user&quot;)
+async def login(user: UserInput, session=Depends(get_session)) -&gt; TokenSchema:
+    try:
+        user_db = session.query(User).filter(User.username == user.username).first()
+        if user_db is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=&quot;Incorrect email or password&quot;
+            )
+
+        verified = auth_handler.verify_password(user.password, user_db.password)
+        if not verified:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=&quot;Incorrect email or password&quot;
+            )
+
+        return {
+            &quot;access_token&quot;: auth_handler.access_token(user_db.username),
+            &quot;refresh_token&quot;: auth_handler.refresh_token(user_db.username),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@router.put(&quot;/change-password&quot;, summary=&quot;Change user password&quot;)
+async def change_password(data: ChangePasswordRequest, current_user: User = Depends(auth_handler.get_current_user), session= Depends(get_session)):
+    try:
+        user_db = session.query(User).filter(User.username == current_user.username).first()
+        if user_db is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=&quot;User not found&quot;
+            )
+
+        verified = auth_handler.verify_password(data.old_password, user_db.password)
+        if not verified:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=&quot;Incorrect mail or password&quot;
+            )
+
+
+        user_db.password = auth_handler.get_password_hash(data.new_password)
+        session.commit()
+
+        return {&quot;message&quot;: &quot;Password changed successfully&quot;}
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+@router.get('/me', summary='Get details of currently logged in user')
+def get_current_user(user: User = Depends(auth_handler.get_current_user)) -&gt; User:
+    return user
+
+</code></pre>
+<h2 id="user">Пользователь (user)</h2>
+<h3 id="_6">Установка навыка для пользователей</h3>
+<ul>
+<li>API, используемый для назначения навыка пользователю.</li>
+<li>Метод: <code>POST</code></li>
+<li>
+<p>URL: <code>/set_skill_for_users/</code></p>
+</li>
+<li>
+<p>Параметры запроса:</p>
+<ul>
+<li><code>skill_id</code>: Целочисленное значение, идентификатор навыка.</li>
+<li><code>user_id</code>: Целочисленное значение, идентификатор пользователя.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_7">Получение всех пользователей</h3>
+<ul>
+<li>API, используемый для получения списка всех пользователей.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/users</code></li>
+</ul>
+<h3 id="_8">Удаление пользователя</h3>
+<ul>
+<li>API, используемый для удаления пользователя по его идентификатору.</li>
+<li>Метод: <code>DELETE</code></li>
+<li>
+<p>URL: <code>/users/{user_id}</code></p>
+</li>
+<li>
+<p>Параметры запроса:</p>
+<ul>
+<li><code>user_id</code>: Целочисленное значение, идентификатор пользователя.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_9">Обновление данных пользователя</h3>
+<ul>
+<li>API, используемый для обновления данных пользователя.</li>
+<li>Метод: <code>PATCH</code></li>
+<li>
+<p>URL: <code>/users/{user_id}</code></p>
+</li>
+<li>
+<p>Параметры запроса:</p>
+<ul>
+<li><code>user_id</code>: Целочисленное значение, идентификатор пользователя.</li>
+<li><code>participant</code>: Объект, содержащий информацию о пользователе для обновления.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_10">Код:</h3>
+<pre><code class="language-python">from fastapi import Depends, HTTPException, APIRouter,  status
+from fastapi.security import OAuth2PasswordRequestForm
+from db import get_session
+from models import Skill, SkillUserLink, UserDefault,User, UserData
+from sqlmodel import  select 
+from typing import List, TypedDict
+from auth.auth_handler import AuthHandler 
+auth_handler = AuthHandler()
+router = APIRouter(dependencies=[Depends(auth_handler.get_current_user)],)
+
+@router.post(&quot;/set_skill_for_users/&quot;)
+def set_skill_for_users(skill_id: int, user_id: int, session = Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+    try:
+        skill = session.query(Skill).filter(Skill.id == skill_id).first()
+        if skill is None:
+            raise HTTPException(status_code=404, detail=&quot;Skill not found&quot;)
+
+        user = session.query(User).filter(User.id == user_id).first()
+        if user is None:
+            raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+        skill_user_link = SkillUserLink(skill_id=skill_id, user_id=user_id)
+        session.add(skill_user_link)
+        session.commit()
+        return {&quot;status&quot;: 200, &quot;message&quot;: &quot;Skill assigned to user successfully.&quot;}
+    except Exception as e:
+
+        session.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/users&quot;)
+def get_all_users(session=Depends(get_session)) -&gt; List[UserData]:
+    try:
+        query = select(User)
+        return session.exec(query).all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete(&quot;/users/{user_id}&quot;)
+def delete_participant(user_id: int, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+    try:
+        user = session.get(User, user_id)
+        if user:
+            session.delete(user)
+            session.commit()
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Participant with ID {user_id} has been deleted successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Participant with ID {user_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch(&quot;/users/{user_id}&quot;)
+def update_participant(user_id: int, participant: UserDefault, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+    try:
+        db_participant = session.get(User, user_id)
+        if db_participant:
+            participant_data = participant.model_dump(exclude_unset=True)
+            for key, value in participant_data.items():
+                setattr(db_participant, key, value)
+            session.add(db_participant)
+            session.commit()
+            session.refresh(db_participant)
+            return {&quot;message&quot;: f&quot;Participant with ID {user_id} has been updated successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Participant with ID {user_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+</code></pre>
+<h2 id="skill">Навыки (Skill)</h2>
+<h3 id="_11">Создание навыка</h3>
+<ul>
+<li>API, используемый для создания нового навыка.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/skills</code></li>
+<li>Параметры запроса:<ul>
+<li><code>skill</code>: Объект, содержащий информацию о новом навыке.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_12">Получение всех навыков</h3>
+<ul>
+<li>API, используемый для получения списка всех навыков.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/skills</code></li>
+</ul>
+<h3 id="id">Получение навыка по ID</h3>
+<ul>
+<li>API, используемый для получения информации о навыке по его идентификатору.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/skills/{skill_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>skill_id</code>: Целочисленное значение, идентификатор навыка.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_13">Обновление информации о навыке</h3>
+<ul>
+<li>API, используемый для обновления информации о навыке.</li>
+<li>Метод: <code>PATCH</code></li>
+<li>URL: <code>/skills/{skill_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>skill_id</code>: Целочисленное значение, идентификатор навыка.</li>
+<li><code>skill</code>: Объект, содержащий информацию о навыке для обновления.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_14">Удаление навыка</h3>
+<ul>
+<li>API, используемый для удаления навыка по его идентификатору.</li>
+<li>Метод: <code>DELETE</code></li>
+<li>URL: <code>/skills/{skill_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>skill_id</code>: Целочисленное значение, идентификатор навыка.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_15">Код:</h3>
+<pre><code class="language-python">from fastapi import Depends, HTTPException, APIRouter
+from sqlalchemy.orm import Session
+
+from typing import List, TypedDict
+from db import get_session
+from models import Skill, SkillDefault
+
+from auth.auth_handler import AuthHandler 
+auth_handler = AuthHandler()
+router = APIRouter(dependencies=[Depends(auth_handler.get_current_user)],)
+
+
+@router.post(&quot;/skills&quot;)
+def create_skill(skill: SkillDefault, session=Depends(get_session))-&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        skill = Skill.model_validate(skill)
+        session.add(skill)
+        session.commit()
+        session.refresh(skill)
+        return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Skill has been created successfully.&quot;}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/skills&quot;)
+def get_all_skills(session=Depends(get_session)) -&gt; List[Skill]:
+    try:
+        skills = session.query(Skill).all()
+        return skills
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/skills/{skill_id}&quot;)
+def get_skill(skill_id: int, session=Depends(get_session)) -&gt; Skill:
+    try:
+        skill = session.query(Skill).filter(Skill.id == skill_id).first()
+        if skill:
+            return skill
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Skill with ID {skill_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch(&quot;/skills/{skill_id}&quot;)
+def update_skill(skill_id: int, skill: SkillDefault, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        db_skill = session.query(Skill).filter(Skill.id == skill_id).first()
+        if db_skill:
+            skill_data = skill.model_dump(exclude_unset=True)
+            for key, value in skill_data.items():
+                setattr(db_skill, key, value)
+            session.commit()
+            session.refresh(db_skill)
+            return db_skill
+        else:
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Skill with ID {skill_id} has been updated successfully.&quot;}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete(&quot;/skills/{skill_id}&quot;)
+def delete_skill(skill_id: int, session=Depends(get_session)):
+    try:
+        skill = session.query(Skill).filter(Skill.id == skill_id).first()
+        if skill:
+            session.delete(skill)
+            session.commit()
+            return {&quot;message&quot;: f&quot;Skill with ID {skill_id} has been deleted successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Skill with ID {skill_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+</code></pre>
+<h2 id="team">Команда (Team)</h2>
+<h3 id="_16">Создание команды</h3>
+<ul>
+<li>API, используемый для создания новой команды.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/teams</code></li>
+<li>Параметры запроса:<ul>
+<li><code>team</code>: Объект, содержащий информацию о новой команде.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_17">Получение всех команд</h3>
+<ul>
+<li>API, используемый для получения списка всех команд.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/teams</code></li>
+</ul>
+<h3 id="_18">Обновление информации о команде</h3>
+<ul>
+<li>API, используемый для обновления информации о команде.</li>
+<li>Метод: <code>PATCH</code></li>
+<li>
+<p>URL: <code>/teams/{team_id}</code></p>
+</li>
+<li>
+<p>Параметры запроса:</p>
+<ul>
+<li><code>team_id</code>: Целочисленное значение, идентификатор команды.</li>
+<li><code>team</code>: Объект, содержащий информацию о команде для обновления.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_19">Удаление команды</h3>
+<ul>
+<li>API, используемый для удаления команды по ее идентификатору.</li>
+<li>Метод: <code>DELETE</code></li>
+<li>URL: <code>/teams/{team_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>team_id</code>: Целочисленное значение, идентификатор команды.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_20">Присоединение к команде</h3>
+<ul>
+<li>API, используемый для присоединения к команде.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/memberships</code></li>
+<li>Параметры запроса:<ul>
+<li><code>membership</code>: Объект, содержащий информацию о членстве в команде.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_21">Код:</h3>
+<pre><code class="language-python">from fastapi import APIRouter, Depends, HTTPException
+from db import get_session
+from models import Team, TeamDefault, MemberShip,TeamCreateRequest,User,TeamData
+from sqlmodel import  select 
+from typing import List, TypedDict
+from auth.auth_handler import AuthHandler 
+auth_handler = AuthHandler()
+router = APIRouter(dependencies=[Depends(auth_handler.get_current_user)],)
+
+@router.post(&quot;/teams&quot;)
+def create_team(team: TeamCreateRequest,session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+
+    try:
+        user_id = team.user_id
+        team = Team.model_validate(TeamDefault(name=team.name))
+
+        if team: 
+            session.add(team)
+            session.commit()
+            session.refresh(team)
+
+            membership = MemberShip(team_id=team.id, user_id=user_id, request_status=&quot;created&quot;)
+            session.add(membership)
+            session.commit()
+            session.refresh(membership) 
+
+        return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Participant with ID {user_id} has successfully created a team.&quot;}
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get(&quot;/teams&quot;)
+def get_all_teams(session=Depends(get_session)) -&gt; List[TeamData]:
+    try:
+        query = select(Team)
+        return session.exec(query).all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch(&quot;/teams/{team_id}&quot;)
+def update_team(team_id: int, team: TeamDefault, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+    try:
+        db_team = session.get(Team, team_id)
+        if db_team:
+            team_data = team.model_dump(exclude_unset=True)
+            for key, value in team_data.items():
+                setattr(db_team, key, value)
+            session.add(db_team)
+            session.commit()
+            session.refresh(db_team)
+            return {&quot;message&quot;: f&quot;Team with ID {team_id} has been updated successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Team with ID {team_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete(&quot;/teams/{team_id}&quot;)
+def delete_team(team_id: int, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+    try:
+        team = session.get(Team, team_id)
+        if team:
+            session.delete(team)
+            session.commit()
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Team with ID {team_id} has been deleted successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Team with ID {team_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post(&quot;/memberships&quot;)
+def join_team(membership: MemberShip, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        participant = session.get(User, membership.user_id)
+        if not participant:
+            raise HTTPException(status_code=404, detail=f&quot;Participant with id {membership.user_id} not found&quot;)
+
+        team = session.get(Team, membership.team_id)
+        if not team:
+            raise HTTPException(status_code=404, detail=f&quot;Team with id {membership.team_id} not found&quot;)
+
+        membership = MemberShip.model_validate(membership)
+        session.add(membership)
+        session.commit()
+        session.refresh(membership)
+
+        return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Participant with ID {membership.user_id} has successfully sent invitation to join team with ID {membership.team_id}.&quot;}
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+</code></pre>
+<h2 id="_22">Решение</h2>
+<h3 id="_23">Создание решения</h3>
+<ul>
+<li>API, используемый для создания нового решения.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/solutions</code></li>
+<li>Параметры запроса:<ul>
+<li><code>solution</code>: Объект, содержащий информацию о новом решении.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_24">Получение всех решений</h3>
+<ul>
+<li>API, используемый для получения списка всех решений.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/solutions</code></li>
+</ul>
+<h3 id="id_1">Получение решения по ID</h3>
+<ul>
+<li>API, используемый для получения информации о решении по его идентификатору.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/solutions/{solution_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>solution_id</code>: Целочисленное значение, идентификатор решения.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_25">Обновление информации о решении</h3>
+<ul>
+<li>API, используемый для обновления информации о решении.</li>
+<li>Метод: <code>PATCH</code></li>
+<li>URL: <code>/solutions/{solution_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>solution_id</code>: Целочисленное значение, идентификатор решения.</li>
+<li><code>solution</code>: Объект, содержащий информацию о решении для обновления.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_26">Удаление решения</h3>
+<ul>
+<li>API, используемый для удаления решения по его идентификатору.</li>
+<li>Метод: <code>DELETE</code></li>
+<li>URL: <code>/solutions/{solution_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>solution_id</code>: Целочисленное значение, идентификатор решения.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_27">Код:</h3>
+<pre><code class="language-python">from fastapi import Depends, HTTPException, APIRouter
+
+from db import get_session
+from models import Solution, SolutionDefault,SolutionData
+from typing import List, TypedDict
+from auth.auth_handler import AuthHandler 
+auth_handler = AuthHandler()
+router = APIRouter(dependencies=[Depends(auth_handler.get_current_user)],)
+@router.post(&quot;/solutions&quot;)
+def create_solution(solution: SolutionDefault, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        solution = Solution.model_validate(solution)
+        session.add(solution)
+        session.commit()
+        session.refresh(solution)
+        return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Solution of the team with ID {solution.team_id} has been created successfully.&quot;}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/solutions&quot;)
+def get_all_solutions(session=Depends(get_session)) -&gt; List[SolutionData]:
+    try:
+        solutions = session.query(Solution).all()
+        return solutions
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/solutions/{solution_id}&quot;)
+def get_solution(solution_id: int, session=Depends(get_session)) -&gt; SolutionData: # type: ignore
+    try:
+        solution = session.get(Solution, solution_id)
+        if solution:
+            return solution
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Solution with ID {solution_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch(&quot;/solutions/{solution_id}&quot;)
+def update_solution(solution_id: int, solution: SolutionDefault, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}):  # type: ignore
+    try:
+        db_solution = session.get(Solution, solution_id)
+        if db_solution:
+            solution_data = solution.model_dump(exclude_unset=True)
+            for key, value in solution_data.items():
+                setattr(db_solution, key, value)
+            session.add(db_solution)
+            session.commit()
+            session.refresh(db_solution)
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Solution with ID {solution_id} has been updated successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Solution with ID {solution_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete(&quot;/solutions/{solution_id}&quot;)
+def delete_solution(solution_id: int, session=Depends(get_session)):
+    try:
+        solution = session.get(Solution, solution_id)
+        if solution:
+            session.delete(solution)
+            session.commit()
+            return {&quot;message&quot;: f&quot;Solution with ID {solution_id} has been deleted successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Solution with ID {solution_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+</code></pre>
+<h2 id="_28">Задача</h2>
+<h3 id="_29">Создание задачи</h3>
+<ul>
+<li>API, используемый для создания новой задачи.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/tasks</code></li>
+<li>Параметры запроса:<ul>
+<li><code>user_id</code>: Целочисленное значение, идентификатор пользователя, создающего задачу.</li>
+<li><code>task</code>: Объект, содержащий информацию о новой задаче.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_30">Получение всех задач</h3>
+<ul>
+<li>API, используемый для получения списка всех задач.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/tasks</code></li>
+</ul>
+<h3 id="_31">Удаление задачи</h3>
+<ul>
+<li>API, используемый для удаления задачи по ее идентификатору.</li>
+<li>Метод: <code>DELETE</code></li>
+<li>URL: <code>/tasks/{task_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>task_id</code>: Целочисленное значение, идентификатор задачи.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_32">Обновление информации о задаче</h3>
+<ul>
+<li>API, используемый для обновления информации о задаче.</li>
+<li>Метод: <code>PATCH</code></li>
+<li>URL: <code>/tasks/{task_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>task_id</code>: Целочисленное значение, идентификатор задачи.</li>
+<li><code>task</code>: Объект</li>
+</ul>
+</li>
+</ul>
+<h3 id="_33">Код:</h3>
+<pre><code class="language-python">from fastapi import Depends, HTTPException,APIRouter
+from db import get_session
+from models import User, Role, Task, TaskDefault
+from sqlmodel import  select 
+from typing import List, TypedDict
+
+from auth.auth_handler import AuthHandler 
+auth_handler = AuthHandler()
+router = APIRouter(dependencies=[Depends(auth_handler.get_current_user)],)
+
+@router.post(&quot;/tasks&quot;)
+def create_task(user_id: int, task: TaskDefault, session=Depends(get_session))-&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        participant = session.get(User,user_id)
+        if participant.role == Role.admin :
+            task = Task.model_validate(task)
+            session.add(task)
+            session.commit()
+            session.refresh(task)
+            return {&quot;status&quot;: 200, &quot;message&quot;: &quot;Task created successfully.&quot;}
+        else:
+            raise HTTPException(status_code=403, detail=&quot;Only admins can create tasks.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/tasks&quot;)
+def get_all_tasks(session=Depends(get_session)) -&gt; List[Task] :
+    try:
+        query = select(Task)
+        return session.exec(query).all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete(&quot;/tasks/{task_id}&quot;)
+def delete_task(task_id: int, user_id: int, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        participant = session.get(User, user_id)
+        if not participant or participant.role != Role.admin:
+            raise HTTPException(status_code=403, detail=&quot;Only admins can delete tasks.&quot;)
+
+
+        db_task = session.get(Task, task_id)
+
+        if db_task:
+            session.delete(db_task)
+            session.commit()
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Task with ID {task_id} has been deleted successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Task with ID {task_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch(&quot;/tasks/{task_id}&quot;)
+def update_task(task_id: int,user_id: int, task: TaskDefault, session=Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        participant = session.get(User, user_id)
+        if not participant or participant.role != Role.admin:
+            raise HTTPException(status_code=403, detail=&quot;Only admins can update tasks.&quot;)
+
+        db_task = session.get(Task, task_id)
+
+        if db_task:
+            task = task.model_dump(exclude_unset=True)
+            for key, value in task.items():
+               setattr(db_task, key, value)
+            session.add(db_task)
+            session.commit()
+            session.refresh(db_task)
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Task with ID {task_id} has been updated successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Task with ID {task_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+</code></pre>
+<h2 id="_34">Комментарий</h2>
+<h3 id="_35">Создание комментария</h3>
+<ul>
+<li>API, используемый для создания нового комментария.</li>
+<li>Метод: <code>POST</code></li>
+<li>URL: <code>/comments</code></li>
+<li>Параметры запроса:<ul>
+<li><code>comment</code>: Объект, содержащий информацию о новом комментарии.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_36">Получение всех комментариев</h3>
+<ul>
+<li>API, используемый для получения списка всех комментариев.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/comments</code></li>
+</ul>
+<h3 id="id_2">Получение комментария по его ID</h3>
+<ul>
+<li>API, используемый для получения комментария по его идентификатору.</li>
+<li>Метод: <code>GET</code></li>
+<li>URL: <code>/comments/{comment_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>comment_id</code>: Целочисленное значение, идентификатор комментария.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_37">Обновление информации о комментарии</h3>
+<ul>
+<li>API, используемый для обновления информации о комментарии.</li>
+<li>Метод: <code>PATCH</code></li>
+<li>URL: <code>/comments/{comment_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>comment_id</code>: Целочисленное значение, идентификатор комментария.</li>
+<li><code>comment</code>: Объект, содержащий обновленную информацию о комментарии.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_38">Удаление комментария</h3>
+<ul>
+<li>API, используемый для удаления комментария по его идентификатору.</li>
+<li>Метод: <code>DELETE</code></li>
+<li>URL: <code>/comments/{comment_id}</code></li>
+<li>Параметры запроса:<ul>
+<li><code>comment_id</code>: Целочисленное значение, идентификатор комментария.</li>
+</ul>
+</li>
+</ul>
+<h3 id="_39">Код:</h3>
+<pre><code class="language-python">from fastapi import Depends, HTTPException, APIRouter
+from sqlalchemy.orm import Session
+from typing import List, TypedDict
+from db import get_session
+from models import Comment, CommentDefault
+
+from auth.auth_handler import AuthHandler 
+auth_handler = AuthHandler()
+router = APIRouter(dependencies=[Depends(auth_handler.get_current_user)],)
+
+@router.post(&quot;/comments&quot;)
+def create_comment(comment: CommentDefault, session = Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        comment = Comment.model_validate(comment)
+        session.add(comment)
+        session.commit()
+        session.refresh(comment)
+        return {&quot;status&quot;: 200, &quot;message&quot;: &quot;Comment has been created successfully.&quot;}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/comments&quot;)
+def get_all_comments(session= Depends(get_session)) -&gt; List[Comment]:
+    try:
+        comments = session.query(Comment).all()
+        return comments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get(&quot;/comments/{comment_id}&quot;, response_model=Comment)
+def get_comment(comment_id: int, session = Depends(get_session)):
+    try:
+        comment = session.query(Comment).filter(Comment.id == comment_id).first()
+        if comment:
+            return comment
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Comment with ID {comment_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch(&quot;/comments/{comment_id}&quot;)
+def update_comment(comment_id: int, comment: CommentDefault, session: Session = Depends(get_session))-&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        db_comment = session.query(Comment).filter(Comment.id == comment_id).first()
+        if db_comment:
+            comment_data = comment.model_dump(exclude_unset=True)
+            for key, value in comment_data.items():
+                setattr(db_comment, key, value)
+            session.commit()
+            session.refresh(db_comment)
+            return db_comment
+        else:
+            raise {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Comment with ID {skill_id} has been updated successfully.&quot;}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete(&quot;/comments/{comment_id}&quot;)
+def delete_comment(comment_id: int, session: Session = Depends(get_session)) -&gt; TypedDict('Response', {&quot;status&quot;: int, &quot;message&quot;: str}): # type: ignore
+    try:
+        comment = session.query(Comment).filter(Comment.id == comment_id).first()
+        if comment:
+            session.delete(comment)
+            session.commit()
+            return {&quot;status&quot;: 200, &quot;message&quot;: f&quot;Comment with ID {comment_id} has been deleted successfully.&quot;}
+        else:
+            raise HTTPException(status_code=404, detail=f&quot;Comment with ID {comment_id} not found.&quot;)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../2_model/" class="btn btn-neutral float-left" title="Модель данных"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../2_model/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
