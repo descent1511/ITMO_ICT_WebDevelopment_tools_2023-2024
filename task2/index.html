@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Задача 2 - My Docs</title>
+    <title>Задача 2 - Lab 2</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -30,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> My Docs
+          <a href=".." class="icon icon-home"> Lab 2
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -70,7 +70,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">My Docs</a>
+          <a href="..">Lab 2</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -194,12 +194,9 @@ if __name__ == &quot;__main__&quot;:
     print(&quot;Execution time (process):&quot;, time.time() - start_time)
 </code></pre>
 <h2 id="_1">Результаты сравнения</h2>
-<p><img alt="task2" src="../images/task2.png" />
-Асинхронное программирование: Подход async оказался самым быстрым из-за того, что он предназначен для исполнения I/O-bound задач (коей и является http-запрос страницы)</p>
-<p>Многопоточность: Подход thread оказался немного медленнее подхода async.</p>
-<p>Многопроцессорность: Подход process же снова оказался на последнем месте, поскольку он не предназначен для данного типа задач. При его использовании появляются ощутимые расходы на создание процессов и управление ими</p>
+<p><img alt="task2" src="../images/task2.png" /></p>
 <h2 id="_2">Выводы</h2>
-<p>В заключение, выбор подхода зависит от характера задачи. Для задач, ограниченных вводом/выводом, асинхронное программирование или многопоточность могут быть более эффективными. Для задач, ограниченных процессором, многопроцессорность может быть лучшим выбором.</p>
+<p>Анализ веб-сайта по заданному URL-адресу и получение содержимого — это задача, связанная с вводом-выводом. Это означает, что скорость задачи ограничена скоростью операций ввода-вывода (в данном случае сетевых операций). В этом случае асинхронный режим должен быть самым быстрым, поскольку он может начать следующую операцию ввода-вывода сразу после запуска текущей, не дожидаясь завершения текущей. Потоки также могут быть быстрыми, если их количество не слишком велико, но они требуют больше накладных расходов, чем асинхронные, поскольку каждому потоку требуется собственный стек и он должен планироваться операционной системой. Многопроцессорная обработка, вероятно, будет самой медленной, поскольку процессы имеют даже больше накладных расходов, чем потоки, и эти накладные расходы не оправданы для задач, связанных с вводом-выводом.</p>
               
             </div>
           </div><footer>
