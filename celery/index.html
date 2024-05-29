@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Celery + Redis - Lab 3</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Celery + Redis";
+        var mkdocs_page_input_path = "celery.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Lab 3
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Описание</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Celery + Redis</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#celerymainpy">celery/main.py</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#celery_apppy">celery_app.py</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#taskspy">tasks.py</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../docker/">Dockerfile</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../docker_compose/">Docker-compose</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Lab 3</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Celery + Redis</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="celery-redis">Celery + Redis</h1>
+<h2 id="celerymainpy"><code>celery/main.py</code></h2>
+<pre><code class="language-python">from fastapi import FastAPI, BackgroundTasks
+from pydantic import BaseModel
+from app.tasks import parse_url_task
+
+app = FastAPI()
+
+class URLItem(BaseModel):
+    url: str
+
+@app.post(&quot;/parse-url/&quot;)
+async def parse_url(item: URLItem, background_tasks: BackgroundTasks):
+    background_tasks.add_task(parse_url_task, item.url)
+    return {&quot;message&quot;: &quot;URL parsing has been started in the background.&quot;}
+
+
+@app.get(&quot;/&quot;)
+async def read_root():
+    return {&quot;message&quot;: &quot;Welcome to the URL parser API!&quot;}
+
+</code></pre>
+<ul>
+<li>Строки 1-4: Импортируем необходимые модули из FastAPI и Pydantic, и импортируем функцию задачи из app.tasks.</li>
+<li>Строка 6: Создаем экземпляр класса FastAPI.</li>
+<li>Строки 9-11: Определяем модель Pydantic для проверки входящих данных URL.</li>
+<li>Строки 13-17: Определяем POST конечную точку /parse-url/, которая принимает URL и запускает фоновую задачу для его анализа.</li>
+<li>Строки 19-21: Определяем корневую GET конечную точку /, которая возвращает приветственное сообщение.</li>
+</ul>
+<h2 id="celery_apppy"><code>celery_app.py</code></h2>
+<pre><code class="language-python">from celery import Celery
+
+celery_app = Celery(
+    &quot;worker&quot;,
+    broker=&quot;redis://redis:6379/0&quot;,
+    backend=&quot;redis://redis:6379/0&quot;,
+)
+
+celery_app.conf.update(
+    task_routes={
+        &quot;app.tasks.parse_url_task&quot;: &quot;main-queue&quot;,
+    },
+)
+</code></pre>
+<ul>
+<li>Строка 1: Импортируем модуль Celery.</li>
+<li>Строки 3-9: Инициализируем Celery приложение с именем worker и настраиваем его для использования Redis как брокера и backend.</li>
+<li>Строки 11-15: Обновляем конфигурацию Celery для маршрутизации задачи parse_url_task в main-queue.</li>
+</ul>
+<h2 id="taskspy"><code>tasks.py</code></h2>
+<pre><code class="language-python">from .celery_app import celery_app
+from .utils import parse_url
+import requests
+
+@celery_app.task
+def parse_url_task(url: str):
+    result = parse_url(url)
+    print(f&quot;Parsed URL: {result}&quot;)
+
+    if result and &quot;error&quot; not in result:
+        try:
+
+            api_get_user_id = &quot;http://fastapi:8000/users/github&quot;
+            response_user_id = requests.get(api_get_user_id, params={&quot;github&quot;: result[&quot;url&quot;]})
+
+            if response_user_id.status_code == 200:
+                user_data = response_user_id.json()
+                user_id = user_data.get(&quot;id&quot;)
+
+                if not user_id:
+                    print(&quot;User ID not found.&quot;)
+                    return
+
+                api_update_repositories = &quot;http://fastapi:8000/users/{user_id}&quot;.format(user_id=user_id)
+                data = {
+                    &quot;repositories&quot;: result[&quot;repositories&quot;],
+                }
+                response_update = requests.patch(api_update_repositories, json=data)
+
+                if response_update.status_code == 200:
+                    print(&quot;Data updated successfully.&quot;)
+                else:
+                    print(f&quot;Failed to update data. Status code: {response_update.status_code}, Response: {response_update.text}&quot;)
+
+            else:
+                print(f&quot;Failed to get user ID. Status code: {response_user_id.status_code}, Response: {response_user_id.text}&quot;)
+
+        except requests.exceptions.RequestException as e:
+            print(f&quot;An error occurred while trying to update data: {e}&quot;)
+</code></pre>
+<ul>
+<li>Строки 1-3: Импортируем Celery приложение, вспомогательную функцию для анализа URL и модуль requests.</li>
+<li>Строки 5-8: Определяем задачу Celery parse_url_task, которая вызывает вспомогательную функцию parse_url и выводит результат.</li>
+<li>Строки 10-13: Проверяем, является ли результат допустимым и не содержит ли ошибок.</li>
+<li>Строки 14-32: Пытаемся получить ID пользователя из FastAPI сервиса и обрабатываем ответ.</li>
+<li>Строки 33-40: Если ID пользователя найден, обновляем репозитории пользователя через FastAPI сервис и обрабатываем ответ.</li>
+<li>Строки 42-43: Обрабатываем любые исключения, которые могут возникнуть во время HTTP запросов.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Описание"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../docker/" class="btn btn-neutral float-right" title="Dockerfile">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../docker/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
