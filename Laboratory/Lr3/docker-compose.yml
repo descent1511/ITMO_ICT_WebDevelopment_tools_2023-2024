@@ -1,0 +1,74 @@
+version: '3.9'
+
+networks:
+  app-network:
+
+services:
+  celery_app:
+    build:
+      context: ./celery
+      dockerfile: Dockerfile
+    container_name: celery
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  celery_worker:
+    build:
+      context: ./celery
+    container_name: celery_worker
+    command: celery -A celery_worker worker --loglevel=info
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - redis
+      - celery_app
+
+  redis:
+    image: redis:7.2.4
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - app-network
+
+  fastapi:
+    build: ./fast-api
+    ports:
+      - "8000:8000"
+    environment:
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: "db"
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY}
+      CELERY_HOST: celery_app
+      CELERY_PORT: "3000"
+    depends_on:
+      - db
+      - celery_app
+    networks:
+      - app-network
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    
+volumes:
+  postgres_data:

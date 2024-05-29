@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+sqlmodel
+psycopg2-binary
+python-dotenv
+httpx
+passlib
+jose
+pyjwt
+requests

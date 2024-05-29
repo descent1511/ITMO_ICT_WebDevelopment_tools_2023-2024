@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+sqlmodel
+python-dotenv
+celery
+redis
+requests
+bs4
