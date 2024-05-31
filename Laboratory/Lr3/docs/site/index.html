@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Lab 3</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Lab 3
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Описание</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="celery/">Celery + Redis</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="docker/">Dockerfile</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="docker_compose/">Docker-compose</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Lab 3</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Описание</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">Описание</h1>
+<h1 id="3-fastapi-docker">Лабораторная работа 3: Упаковка FastAPI приложения в Docker, Работа с источниками данных и Очереди</h1>
+<h2 id="_2">Цель</h2>
+<p>Научиться упаковывать FastAPI приложение в Docker, интегрировать парсер данных с базой данных и вызывать парсер через API и очередь.</p>
+<p>Задачи 1 и 2 - задачи на минимум для сдачи - 70% баллов. Задачи 1, 2 и 3 - 100% баллов.</p>
+<h3 id="1-fastapi-docker">Подзадача 1: Упаковка FastAPI приложения, базы данных и парсера данных в Docker</h3>
+<p>Docker — это платформа для разработки, доставки и запуска приложений в контейнерах. Контейнеры позволяют упаковать приложение и все его зависимости в единый образ, который можно запускать на любой системе, поддерживающей Docker, что обеспечивает консистентность среды выполнения и упрощает развертывание. Docker помогает ускорить разработку, повысить гибкость и масштабируемость приложений. <br />
+ Материалы: 
+ <a href="https://tproger.ru/translations/how-to-start-using-docker">Основы работы с Docker</a>.</p>
+<ol>
+<li>
+<p><strong>Создание FastAPI приложения</strong>:
+   Создано в рамках лабораторной работы номер 1</p>
+</li>
+<li>
+<p><strong>Создание базы данных</strong>:
+   Создано в рамках лабораторной работы номер 1</p>
+</li>
+<li>
+<p><strong>Создание парсера данных</strong>:
+   Создано в рамках лабораторной работы номер 2</p>
+</li>
+<li>
+<p><strong>Реулизуйте возможность вызова парсера по http</strong>
+   Для этого можно сделать отдельное приложение FastAPI для парсера или воспользоваться библиотекой socket или подобными.</p>
+</li>
+</ol>
+<p>Пример кода:</p>
+<pre><code>from fastapi import FastAPI, HTTPException
+...
+
+app = FastAPI()
+
+@app.post(&quot;/parse&quot;)
+def parse(url: str):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        # Вызов парсера
+        return {&quot;message&quot;: &quot;Parsing completed&quot;, ...}
+    except requests.RequestException as e:
+        raise HTTPException(status_code=500, detail=str(e))
+</code></pre>
+<ol>
+<li><strong>Разработка Dockerfile</strong>:</li>
+<li>Необходимо создать Dockerfile для упаковки FastAPI приложения и приложения с паресером. В Dockerfile указать базовый образ, установить необходимые зависимости, скопировать исходные файлы в контейнер и определить команду для запуска приложения.</li>
+<li><strong>Зачем</strong>: Docker позволяет упаковать приложение и все его зависимости в единый контейнер, что обеспечивает консистентность среды выполнения и упрощает развертывание.</li>
+<li>
+<p>Полезные ссылки:</p>
+<ul>
+<li><a href="https://fastapi.tiangolo.com/ru/deployment/docker/">FastAPI и Docker-контейнеры</a></li>
+<li><a href="https://habr.com/ru/articles/578744/">Запускаем PostgreSQL в Docker: от простого к сложному</a></li>
+<li><a href="https://docs.docker.com/engine/reference/builder/">Документация Dockerfile</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Создание Docker Compose файла</strong>:</p>
+</li>
+<li>Необходимо написать docker-compose.yml для управления оркестром сервисов, включающих FastAPI приложение, базу данных и парсер данных. Определите сервисы, укажите порты и зависимости между сервисами.</li>
+<li><strong>Зачем</strong>: Docker Compose упрощает управление несколькими контейнерами, позволяя вам запускать и настраивать все сервисы вашего приложения с помощью одного файла конфигурации.</li>
+<li>Полезные ссылки:<ul>
+<li><a href="https://rebrainme.com/blog/kubernetes/zachem-nuzhny-sistemy-orkestraczii/">Зачем нужны системы оркестрации?</a></li>
+<li><a href="https://dev.to/abbazs/developing-a-fastapi-application-in-a-docker-container-31n4">Developing a FastAPI Application in a Docker Container</a></li>
+<li><a href="https://docs.docker.com/compose/">Документация Docker Compose</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="2-fastapi">Подзадача 2: Вызов парсера из FastAPI</h3>
+<ol>
+<li>** Эндпоинт в FastAPI для вызова парсера**:</li>
+<li>Необходимо добавить в FastAPI приложение ендпоинт, который будет принимать запросы с URL для парсинга <strong>от клиента</strong>, отправлять запрос парсеру (запущенному в отдельном контейнере) и возвращать ответ с результатом <strong>клиенту</strong>.</li>
+<li><strong>Зачем</strong>: Это позволит интегрировать функциональность парсера в ваше веб-приложение, предоставляя возможность пользователям запускать парсинг через API.</li>
+<li>Полезные ссылки:<ul>
+<li><a href="https://fastapi.tiangolo.com/tutorial/path-params/">Документация FastAPI</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="3-fastapi">Подзадача 3: Вызов парсера из FastAPI через очередь</h3>
+<h3 id="_3">Как это работает</h3>
+<ol>
+<li><strong>Celery и Redis</strong>:</li>
+<li>Celery — это асинхронная очередь задач, которая позволяет легко распределять и выполнять задачи в фоне. Redis используется как брокер сообщений, хранящий задачи, которые должны быть выполнены.</li>
+<li>
+<p>При получении HTTP-запроса, задача ставится в очередь Redis, и Celery-воркер обрабатывает её в фоне.</p>
+</li>
+<li>
+<p><strong>Docker Compose</strong>:</p>
+</li>
+<li>Docker Compose позволяет легко настроить и запустить Celery, Redis и ваше FastAPI приложение как отдельные контейнеры, работающие в одной сети. Это упрощает управление зависимостями и конфигурацией всех компонентов системы.</li>
+</ol>
+<h3 id="_4">Почему это важно для студентов</h3>
+<p>Практические навыки настройки и использования асинхронной очереди задач в реальном приложении - <strong>первый шаг для MLops для 45 направления</strong>. Студенты научатся разделять ответственность между различными сервисами и компоновать их для достижения общей цели. В реальных проектах часто требуется выполнение сложных и длительных операций. Опыт работы с Celery и Redis подготовит к решению таких задач и даст уверенность в использовании современных технологий.</p>
+<h3 id="_5">Задание</h3>
+<ol>
+<li><strong>Установить Celery и Redis</strong>:</li>
+<li>Необходимо добавить зависимости для Celery и Redis в проект. Celery будет использоваться для обработки задач в фоне, а Redis будет выступать в роли брокера задач и хранилища результатов.</li>
+<li><strong>Зачем</strong>: Celery и Redis позволяют организовать фоновую обработку задач, что полезно для выполнения длительных или ресурсоемких операций без блокировки основного потока выполнения.</li>
+<li>
+<p>Полезные ссылки:</p>
+<ul>
+<li><a href="https://habr.com/ru/articles/686820/">Celery: проясняем неочевидные моменты</a></li>
+<li><a href="https://docs.celeryproject.org/en/stable/">Документация Celery</a></li>
+<li><a href="https://redis.io/documentation">Документация Redis</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Настроить Celery</strong>:</p>
+</li>
+<li>необходимо создать файл конфигурации для Celery. Определть задачу для парсинга URL, которая будет выполняться в фоновом режиме.</li>
+<li><strong>Зачем</strong>: Настройка Celery позволит асинхронно обрабатывать задачи, что улучшит производительность и отзывчивость вашего приложения.</li>
+<li>
+<p>Полезные ссылки:</p>
+<ul>
+<li><a href="https://docs.celeryproject.org/en/stable/userguide/configuration.html">Документация Celery: Настройка</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Обновить Docker Compose файл</strong>:</p>
+</li>
+<li>Необходимо добавить сервисы для Redis и Celery worker в docker-compose.yml. Определите зависимости между сервисами, чтобы обеспечить корректную работу оркестра.</li>
+<li><strong>Зачем</strong>: Это позволит вам легко управлять всеми сервисами вашего приложения, включая асинхронную обработку задач, с помощью одного файла конфигурации.</li>
+<li>
+<p>Полезные ссылки:</p>
+<ul>
+<li><a href="https://docs.docker.com/compose/">Документация Docker Compose</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Эндпоинт для асинхронного вызова парсера</strong>:</p>
+</li>
+<li>Необходимо добавить в FastAPI приложение маршрут для асинхронного вызова парсера. Маршрут должен принимать запросы с URL для парсинга, ставить задачу в очередь с помощью Celery и возвращать ответ о начале выполнения задачи.</li>
+<li><strong>Зачем</strong>: Это позволит запускать парсинг веб-страниц в фоне, что улучшит производительность и пользовательский опыт вашего приложения.</li>
+<li>Полезные ссылки:<ul>
+<li><a href="https://fastapi.tiangolo.com/tutorial/background-tasks/">Документация FastAPI: Фоновая задачи</a></li>
+</ul>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="celery/" class="btn btn-neutral float-right" title="Celery + Redis">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="celery/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.5.3
+Build Date UTC : 2024-05-29 18:13:53.451847+00:00
+-->

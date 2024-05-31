@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-def parse_url(url: str):
+def parse_url(url: str) -> dict:
     try:
         time.sleep(10)
         tmp = url
@@ -19,10 +19,20 @@ def parse_url(url: str):
             repo_count = repo_count_elem.get_text(strip=True)
         else:
             repo_count = "No repositories found"
-        print(repo_count)
+        
+        total_stars = 0
+        repo_list_items = soup.find_all('li', {'itemprop': 'owns'})
+        for repo in repo_list_items:
+            stars = repo.find('a', {'href': lambda x: x and x.endswith('/stargazers')})
+            stars_count = int(stars.get_text(strip=True).replace(',', '')) if stars else 0
+            total_stars += stars_count
+        
         return {
             "url": tmp,
-            "repositories": repo_count
+            "data": {
+                "repositories": repo_count,
+                "stars": total_stars
+            }
         }
 
     except Exception as e:

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Docker-compose - Lab 3</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Docker-compose";
+        var mkdocs_page_input_path = "docker_compose.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Lab 3
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Описание</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../celery/">Celery + Redis</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../docker/">Dockerfile</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Docker-compose</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">Объяснение</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#networks">Networks</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#app-network">app-network</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#services">Services</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#celery_app">Celery_app</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#celery_worker">Celery_worker</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#redis">Redis</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#fastapi">Fastapi</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#db">DB</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Lab 3</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Docker-compose</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="docker-compose">Docker-compose</h1>
+<pre><code class="language-yml">version: '3.9'
+
+networks:
+  app-network:
+
+services:
+  celery_app:
+    build:
+      context: ./celery
+      dockerfile: Dockerfile
+    container_name: celery
+    restart: always
+    ports:
+      - &quot;3000:3000&quot;
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  celery_worker:
+    build:
+      context: ./celery
+    container_name: celery_worker
+    command: celery -A celery_worker worker --loglevel=info
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - redis
+      - celery_app
+
+  redis:
+    image: redis:7.2.4
+    container_name: redis
+    ports:
+      - &quot;6379:6379&quot;
+    restart: always
+    networks:
+      - app-network
+
+  fastapi:
+    build: ./fast-api
+    ports:
+      - &quot;8000:8000&quot;
+    environment:
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: &quot;db&quot;
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY}
+      CELERY_HOST: celery_app
+      CELERY_PORT: &quot;3000&quot;
+    depends_on:
+      - db
+      - celery_app
+    networks:
+      - app-network
+
+  db:
+    image: postgres:latest
+    ports:
+      - &quot;5432:5432&quot;
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+</code></pre>
+<h2 id="_1">Объяснение</h2>
+<h3 id="networks">Networks</h3>
+<h4 id="app-network"><code>app-network</code></h4>
+<p>Определяет пользовательскую сеть с именем <code>app-network</code>, которая используется для связи между контейнерами.</p>
+<h3 id="services">Services</h3>
+<h4 id="celery_app">Celery_app</h4>
+<ol>
+<li><code>build:</code></li>
+<li><code>context: ./celery</code>
+     Определяет путь к директории с исходным кодом приложения Celery.</li>
+<li>
+<p><code>dockerfile: Dockerfile</code>
+     Указывает имя Dockerfile, который будет использоваться для сборки образа.</p>
+</li>
+<li>
+<p><code>container_name: celery</code>
+   Устанавливает имя контейнера как <code>celery</code>.</p>
+</li>
+<li>
+<p><code>restart: always</code>
+   Настраивает контейнер на автоматический перезапуск в случае сбоя.</p>
+</li>
+<li>
+<p><code>ports:</code></p>
+</li>
+<li>
+<p><code>"3000:3000"</code>
+     Пробрасывает порт 3000 на хосте к порту 3000 внутри контейнера.</p>
+</li>
+<li>
+<p><code>networks:</code></p>
+</li>
+<li>
+<p><code>app-network</code>
+     Подключает контейнер к сети <code>app-network</code>.</p>
+</li>
+<li>
+<p><code>depends_on:</code></p>
+</li>
+<li><code>redis</code>
+     Указывает, что контейнер <code>celery_app</code> зависит от контейнера <code>redis</code> и должен запускаться после него.</li>
+</ol>
+<h4 id="celery_worker">Celery_worker</h4>
+<ol>
+<li><code>build:</code></li>
+<li>
+<p><code>context: ./celery</code>
+     Определяет путь к директории с исходным кодом приложения Celery Worker.</p>
+</li>
+<li>
+<p><code>container_name: celery_worker</code>
+   Устанавливает имя контейнера как <code>celery_worker</code>.</p>
+</li>
+<li>
+<p><code>command: celery -A celery_worker worker --loglevel=info</code>
+   Запускает команду для старта Celery Worker с указанием уровня логирования <code>info</code>.</p>
+</li>
+<li>
+<p><code>restart: always</code>
+   Настраивает контейнер на автоматический перезапуск в случае сбоя.</p>
+</li>
+<li>
+<p><code>networks:</code></p>
+</li>
+<li>
+<p><code>app-network</code>
+     Подключает контейнер к сети <code>app-network</code>.</p>
+</li>
+<li>
+<p><code>depends_on:</code></p>
+</li>
+<li><code>redis</code></li>
+<li><code>celery_app</code>
+     Указывает, что контейнер <code>celery_worker</code> зависит от контейнеров <code>redis</code> и <code>celery_app</code> и должен запускаться после них.</li>
+</ol>
+<h4 id="redis">Redis</h4>
+<ol>
+<li>
+<p><code>image: redis:7.2.4</code>
+   Использует официальный образ Redis версии 7.2.4.</p>
+</li>
+<li>
+<p><code>container_name: redis</code>
+   Устанавливает имя контейнера как <code>redis</code>.</p>
+</li>
+<li>
+<p><code>ports:</code></p>
+</li>
+<li>
+<p><code>"6379:6379"</code>
+     Пробрасывает порт 6379 на хосте к порту 6379 внутри контейнера.</p>
+</li>
+<li>
+<p><code>restart: always</code>
+   Настраивает контейнер на автоматический перезапуск в случае сбоя.</p>
+</li>
+<li>
+<p><code>networks:</code></p>
+</li>
+<li><code>app-network</code>
+     Подключает контейнер к сети <code>app-network</code>.</li>
+</ol>
+<h4 id="fastapi">Fastapi</h4>
+<ol>
+<li>
+<p><code>build: ./fast-api</code>
+   Определяет путь к директории с исходным кодом FastAPI приложения.</p>
+</li>
+<li>
+<p><code>ports:</code></p>
+</li>
+<li>
+<p><code>"8000:8000"</code>
+     Пробрасывает порт 8000 на хосте к порту 8000 внутри контейнера.</p>
+</li>
+<li>
+<p><code>environment:</code>
+   Определяет переменные окружения для контейнера:</p>
+</li>
+<li><code>DB_USER: ${DB_USER}</code></li>
+<li><code>DB_NAME: ${DB_NAME}</code></li>
+<li><code>DB_PASS: ${DB_PASS}</code></li>
+<li><code>DB_HOST: "db"</code></li>
+<li><code>JWT_SECRET_KEY: ${JWT_SECRET_KEY}</code></li>
+<li><code>JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY}</code></li>
+<li><code>CELERY_HOST: celery_app</code></li>
+<li>
+<p><code>CELERY_PORT: "3000"</code></p>
+</li>
+<li>
+<p><code>depends_on:</code></p>
+</li>
+<li><code>db</code></li>
+<li>
+<p><code>celery_app</code>
+     Указывает, что контейнер <code>fastapi</code> зависит от контейнеров <code>db</code> и <code>celery_app</code> и должен запускаться после них.</p>
+</li>
+<li>
+<p><code>networks:</code></p>
+</li>
+<li><code>app-network</code>
+     Подключает контейнер к сети <code>app-network</code>.</li>
+</ol>
+<h4 id="db">DB</h4>
+<ol>
+<li>
+<p><code>image: postgres:latest</code>
+   Использует официальный образ Postgres последней версии.</p>
+</li>
+<li>
+<p><code>ports:</code></p>
+</li>
+<li>
+<p><code>"5432:5432"</code>
+     Пробрасывает порт 5432 на хосте к порту 5432 внутри контейнера.</p>
+</li>
+<li>
+<p><code>environment:</code>
+   Определяет переменные окружения для контейнера:</p>
+</li>
+<li><code>POSTGRES_USER: ${DB_USER}</code></li>
+<li><code>POSTGRES_PASSWORD: ${DB_PASS}</code></li>
+<li>
+<p><code>POSTGRES_DB: ${DB_NAME}</code></p>
+</li>
+<li>
+<p><code>volumes:</code></p>
+</li>
+<li>
+<p><code>postgres_data:/var/lib/postgresql/data</code>
+     Подключает том <code>postgres_data</code> к директории <code>/var/lib/postgresql/data</code> внутри контейнера для сохранения данных базы данных.</p>
+</li>
+<li>
+<p><code>networks:</code></p>
+</li>
+<li><code>app-network</code>
+     Подключает контейнер к сети <code>app-network</code>.</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../docker/" class="btn btn-neutral float-left" title="Dockerfile"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../docker/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

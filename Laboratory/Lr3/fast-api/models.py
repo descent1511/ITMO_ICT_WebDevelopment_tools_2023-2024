@@ -95,7 +95,7 @@ class UserDefault(SQLModel) :
     gender : Optional[Gender]
     github : Optional[str]
     repositories : Optional[int] = None
-
+    stars : Optional[int] = None
         
 
     @field_validator("email")
@@ -118,6 +118,7 @@ class UserUpdate(SQLModel):
     role: Optional[Role] = None
     gender: Optional[Gender] = None
     repositories : Optional[int] = None
+    stars : Optional[int] = None
 
 class User(UserDefault,table=True):
     id: int = Field(default=None, primary_key=True)
